@@ -62,8 +62,8 @@ function search(txt, txtLow, word, pos) {
         : txtLow.indexOf(word.word, pos[1]);
       if (pos[0] < 0) return false;
       pos[1] = pos[0] + word.word.length;
-      if ((pos[0] === 0 || txt[pos[0] - 1] === ' ')
-        && (pos[1] === txt.length || txt[pos[1]] === ' ')) {
+      if ((pos[0] === 0 || isWhitespace(txt[pos[0] - 1]))
+        && (pos[1] === txt.length || isWhitespace(txt[pos[1]]))) {
         return true;
       }
     }
@@ -75,4 +75,12 @@ function search(txt, txtLow, word, pos) {
     pos[1] = pos[0] + word.word.length;
     return true;
   }
+}
+
+function isWhitespace(c) {
+  return c === ' ' || c === '\n' || c === '\r' || c === '\t'
+    || c === '\f' || c === '\v' || c === '\u00a0' || c === '\u1680'
+    || c === '\u2000' || c === '\u200a' || c === '\u2028'
+    || c === '\u2029' || c === '\u202f' || c === '\u205f'
+    || c === '\u3000' || c === '\ufeff';
 }
