@@ -22,20 +22,20 @@ chrome.storage.local.get('words', (result) => {
   }
 });
 
-function colorize(node, words) {
+function colorize(node, words, startIndex) {
   const txt = node.data;
   if (!txt) return;
   const txtLow = words.i ? txt.toLowerCase() : undefined;
 
   const pos = [-1, -1];
 
-  for (const word of words) {
-    if (!search(txt, txtLow, word, pos)) continue;
+  for (let i = startIndex || 0; i < words.length; i++) {
+    if (!search(txt, txtLow, words[i], pos)) continue;
 
     const text1 = pos[0] === 0 ? null : document.createTextNode(txt.substring(0, pos[0]));
     const text2 = pos[1] === txt.length ? null : document.createTextNode(txt.substring(pos[1]));
     const span = document.createElement('span');
-    span.style.backgroundColor = word.color;
+    span.style.backgroundColor = words[i].color;
     span.textContent = txt.substring(pos[0], pos[1]);
 
     const parent = node.parentElement;
@@ -46,8 +46,8 @@ function colorize(node, words) {
 
     parent.removeChild(node);
 
-    if (text1) colorize(text1, words);
-    if (text2) colorize(text2, words);
+    if (text1) colorize(text1, words, i + 1);
+    if (text2) colorize(text2, words, i);
 
     break;
   }
