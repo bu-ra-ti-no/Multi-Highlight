@@ -1,0 +1,20 @@
+{
+  "manifest_version": 3,
+  "name": "__MSG_extName__",
+  "version": "1.0.0",
+  "description": "__MSG_extDescription__",
+  "action": {
+    "default_title": "__MSG_extTooltip__",
+    "default_icon": "icon.png"
+  },
+  "options_page": "options/options.html",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "storage"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "default_locale": "en"
+}

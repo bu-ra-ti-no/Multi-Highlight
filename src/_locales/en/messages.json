@@ -1,0 +1,29 @@
+{
+  "extName": {
+    "message": "Multi-Highlight"
+  },
+  "extDescription": {
+    "message": "Highlights all words you want in webpages."
+  },
+  "extTooltip": {
+    "message": "Multi-Highlight"
+  },
+  "optCaption": {
+    "message": "Words&nbsp;and&nbsp;colors"
+  },
+  "optWord": {
+    "message": "Word"
+  },
+  "optColor": {
+    "message": "Color"
+  },
+  "optMatchCase": {
+    "message": "Match case"
+  },
+  "optWholeWord": {
+    "message": "Whole word"
+  },
+  "optApply": {
+    "message": "Apply changes"
+  }
+}

@@ -1,0 +1,40 @@
+html {
+    text-align: center;
+}
+
+body {
+    display: inline-block;
+    border: 1px dashed silver;
+    margin: 0;
+    padding: .5em;
+}
+
+table>caption {
+    font-weight: bold;
+    font-size: 1.3em;
+    margin-bottom: .4em;
+    white-space: nowrap;
+}
+
+table, th {
+    border: 2px solid black;
+    border-collapse: collapse;
+}
+
+th {
+    background-color: gainsboro;
+}
+
+td {
+    border: 1px solid black;
+    border-collapse: collapse;
+    padding: 0 4px;
+}
+
+#apply {
+    margin-top: .4em;
+}
+
+button, input[type=checkbox] {
+    cursor: pointer;
+}

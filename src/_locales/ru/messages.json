@@ -1,0 +1,29 @@
+{
+  "extName": {
+    "message": "Множественная подсветка"
+  },
+  "extDescription": {
+    "message": "Выделяет цветными маркерами найденные слова из заданного набора."
+  },
+  "extTooltip": {
+    "message": "Множественная подсветка слов"
+  },
+  "optCaption": {
+    "message": "Подсвечиваемые&nbsp;слова"
+  },
+  "optWord": {
+    "message": "Слово"
+  },
+  "optColor": {
+    "message": "Цвет"
+  },
+  "optMatchCase": {
+    "message": "С учётом регистра"
+  },
+  "optWholeWord": {
+    "message": "Слово целиком"
+  },
+  "optApply": {
+    "message": "Принять изменения"
+  }
+}

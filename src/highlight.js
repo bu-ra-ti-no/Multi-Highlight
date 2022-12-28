@@ -1,0 +1,78 @@
+chrome.storage.local.get('words', (result) => {
+  const ignore = ['STYLE', 'SCRIPT', 'NOSCRIPT', 'IFRAME', 'OBJECT'];
+
+  const words = result.words || [];
+  words.i = false;
+  for (const word of words) {
+    if (!word.matchCase) {
+      word.word = word.word.toLowerCase();
+      words.i = true;
+    }
+  }
+
+  const nodeIterator = document.createNodeIterator(document.body, NodeFilter.SHOW_TEXT, (node) => {
+    return ignore.includes(node.parentElement.tagName)
+      ? NodeFilter.FILTER_REJECT
+      : NodeFilter.FILTER_ACCEPT;
+  });
+
+  let node;
+  while (node = nodeIterator.nextNode()) {
+    colorize(node, words);
+  }
+});
+
+function colorize(node, words) {
+  const txt = node.data;
+  if (!txt) return;
+  const txtLow = words.i ? txt.toLowerCase() : undefined;
+
+  const pos = [-1, -1];
+
+  for (const word of words) {
+    if (!search(txt, txtLow, word, pos)) continue;
+
+    const text1 = pos[0] === 0 ? null : document.createTextNode(txt.substring(0, pos[0]));
+    const text2 = pos[1] === txt.length ? null : document.createTextNode(txt.substring(pos[1]));
+    const span = document.createElement('span');
+    span.style.backgroundColor = word.color;
+    span.textContent = txt.substring(pos[0], pos[1]);
+
+    const parent = node.parentElement;
+
+    if (text1) parent.insertBefore(text1, node);
+    parent.insertBefore(span, node);
+    if (text2) parent.insertBefore(text2, node);
+
+    parent.removeChild(node);
+
+    if (text1) colorize(text1, words);
+    if (text2) colorize(text2, words);
+
+    break;
+  }
+}
+
+function search(txt, txtLow, word, pos) {
+  if (word.wholeWord) {
+    pos[1] = 0;
+    while (true) {
+      pos[0] = word.matchCase
+        ? txt.indexOf(word.word, pos[1])
+        : txtLow.indexOf(word.word, pos[1]);
+      if (pos[0] < 0) return false;
+      pos[1] = pos[0] + word.word.length;
+      if ((pos[0] === 0 || txt[pos[0] - 1] === ' ')
+        && (pos[1] === txt.length || txt[pos[1]] === ' ')) {
+        return true;
+      }
+    }
+  } else {
+    pos[0] = word.matchCase
+      ? txt.indexOf(word.word)
+      : txtLow.indexOf(word.word);
+    if (pos[0] < 0) return false;
+    pos[1] = pos[0] + word.word.length;
+    return true;
+  }
+}
