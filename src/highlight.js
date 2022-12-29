@@ -1,14 +1,18 @@
 chrome.storage.local.get('words', (result) => {
-  const ignore = ['STYLE', 'SCRIPT', 'NOSCRIPT', 'IFRAME', 'OBJECT'];
-
   const words = result.words || [];
   words.i = false;
   for (const word of words) {
-    if (!word.matchCase) {
+    if (word.re) {
+      word.word = word.word.slice(-1) === 'i'
+        ? new RegExp(word.word.slice(1, -2), 'i')
+        : new RegExp(word.word.slice(1, -1));
+    } else if (!word.matchCase) {
       word.word = word.word.toLowerCase();
       words.i = true;
     }
   }
+
+  const ignore = ['STYLE', 'SCRIPT', 'NOSCRIPT', 'IFRAME', 'OBJECT'];
 
   const nodeIterator = document.createNodeIterator(document.body, NodeFilter.SHOW_TEXT, (node) => {
     return ignore.includes(node.parentElement.tagName)
@@ -54,7 +58,13 @@ function colorize(node, words, startIndex) {
 }
 
 function search(txt, txtLow, word, pos) {
-  if (word.wholeWord) {
+  if (word.re) {
+    const found = word.word.exec(txt);
+    if (found === null) return false;
+    pos[0] = found.index;
+    pos[1] = pos[0] + found[0].length;
+    return true;
+  } else if (word.wholeWord) {
     pos[1] = 0;
     while (true) {
       pos[0] = word.matchCase
@@ -63,7 +73,7 @@ function search(txt, txtLow, word, pos) {
       if (pos[0] < 0) return false;
       pos[1] = pos[0] + word.word.length;
       if ((pos[0] === 0 || isWhitespace(txt[pos[0] - 1]))
-        && (pos[1] === txt.length || isWhitespace(txt[pos[1]]))) {
+          && (pos[1] === txt.length || isWhitespace(txt[pos[1]]))) {
         return true;
       }
     }

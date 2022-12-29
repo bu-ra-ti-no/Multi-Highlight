@@ -38,3 +38,11 @@ td {
 button, input[type=checkbox] {
     cursor: pointer;
 }
+
+input[pattern]:valid {
+    color: green;
+}
+
+td:has(>input[pattern]:valid)~td>input[type=checkbox] {
+    display: none;
+}

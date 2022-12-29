@@ -23,11 +23,13 @@ tbody.onchange = (e) => {
 document.getElementById('apply').onclick = function () {
   const arr = Array.from(tbody.querySelectorAll('tr'))
     .map((tr) => {
+      const inputs = tr.querySelectorAll('input');
       return {
-        word: tr.firstChild.firstChild.value,
-        color: tr.children[1].firstChild.value,
-        matchCase: tr.children[2].firstChild.checked,
-        wholeWord: tr.children[3].firstChild.checked,
+        word: inputs[0].value,
+        re: !inputs[0].validity.patternMismatch,
+        color: inputs[1].value,
+        matchCase: inputs[2].checked,
+        wholeWord: inputs[3].checked,
       };
     })
     .filter(item => item.word);
@@ -53,7 +55,7 @@ function add(item) {
   }
 
   td = document.createElement('td');
-  td.innerHTML = `<input value="${item.word}">`;
+  td.innerHTML = `<input value="${item.word}" pattern="^\/.+\/i?$" title>`;
   tr.appendChild(td);
 
   td = document.createElement('td');
