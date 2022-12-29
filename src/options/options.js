@@ -20,29 +20,28 @@ tbody.onchange = (e) => {
   }
 };
 
-document.getElementById('apply').onclick = function () {
-  const arr = Array.from(tbody.querySelectorAll('tr'))
-    .map((tr) => {
-      const inputs = tr.querySelectorAll('input');
-      return {
-        word: inputs[0].value,
-        re: !inputs[0].validity.patternMismatch,
-        color: inputs[1].value,
-        matchCase: inputs[2].checked,
-        wholeWord: inputs[3].checked,
-      };
-    })
-    .filter(item => item.word);
+document.getElementById('copy').onclick = function () {
+  navigator.clipboard
+    .writeText(JSON.stringify(toArray()))
+    .catch(e => alert(e.message));
+};
 
-  chrome.storage.local.set({ words: arr })
+document.getElementById('paste').onclick = function () {
+  navigator.clipboard
+    .readText()
+    .then(txt => fromArray(JSON.parse(txt)))
+    .then(() => document.getElementById('apply').removeAttribute('disabled'))
+    .catch(e => alert(e.message));
+};
+
+document.getElementById('apply').onclick = function () {
+  chrome.storage.local.set({ words: toArray() })
     .then(() => this.setAttribute('disabled', ''));
 };
 
 chrome.storage.local.get('words')
   .then((result) => {
-    if (result.words) {
-      result.words.forEach(add);
-    }
+    if (result.words) fromArray(result.words);
   });
 
 function add(item) {
@@ -83,3 +82,22 @@ function del(tr) {
   tbody.removeChild(tr);
 }
 
+function toArray() {
+  return Array.from(tbody.querySelectorAll('tr'))
+    .map((tr) => {
+      const inputs = tr.querySelectorAll('input');
+      return {
+        word: inputs[0].value,
+        re: !inputs[0].validity.patternMismatch,
+        color: inputs[1].value,
+        matchCase: inputs[2].checked,
+        wholeWord: inputs[3].checked,
+      };
+    })
+    .filter(item => item.word);
+}
+
+function fromArray(arr) {
+  tbody.querySelectorAll('tr').forEach(tr => tr.remove());
+  arr.forEach(add);
+}

@@ -23,6 +23,12 @@
   "optWholeWord": {
     "message": "Слово целиком"
   },
+  "optCopy": {
+    "message": "Копировать"
+  },
+  "optPaste": {
+    "message": "Вставить"
+  },
   "optApply": {
     "message": "Принять изменения"
   }

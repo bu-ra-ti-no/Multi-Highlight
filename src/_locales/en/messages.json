@@ -23,6 +23,12 @@
   "optWholeWord": {
     "message": "Whole word"
   },
+  "optCopy": {
+    "message": "Copy"
+  },
+  "optPaste": {
+    "message": "Paste"
+  },
   "optApply": {
     "message": "Apply changes"
   }
