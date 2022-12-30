@@ -9,7 +9,7 @@ document.getElementById('add').onclick = () => add();
 
 tbody.onclick = (e) => {
   if (e.target.tagName === 'BUTTON') {
-    del(e.target.parentNode.parentNode);
+    e.target.parentNode.parentNode.remove();
     document.getElementById('apply').removeAttribute('disabled');
   }
 };
@@ -30,7 +30,9 @@ document.getElementById('paste').onclick = function () {
   navigator.clipboard
     .readText()
     .then(txt => fromArray(JSON.parse(txt)))
-    .then(() => document.getElementById('apply').removeAttribute('disabled'))
+    .then((ok) => {
+      if (ok) document.getElementById('apply').removeAttribute('disabled');
+    })
     .catch(e => alert(e.message));
 };
 
@@ -58,7 +60,7 @@ function add(item) {
   tr.appendChild(td);
 
   td = document.createElement('td');
-  td.innerHTML = `<input type="color" value="${item.color}">`;
+  td.innerHTML = `<input type="color" value="${item.color || '#ffff00'}">`;
   tr.appendChild(td);
 
   td = document.createElement('td');
@@ -78,26 +80,25 @@ function add(item) {
   if (focus) tr.firstChild.firstChild.focus();
 }
 
-function del(tr) {
-  tbody.removeChild(tr);
-}
-
 function toArray() {
-  return Array.from(tbody.querySelectorAll('tr'))
+  return Array.from(tbody.rows)
     .map((tr) => {
       const inputs = tr.querySelectorAll('input');
+      const re = !inputs[0].validity.patternMismatch;
       return {
         word: inputs[0].value,
-        re: !inputs[0].validity.patternMismatch,
+        re: re,
         color: inputs[1].value,
-        matchCase: inputs[2].checked,
-        wholeWord: inputs[3].checked,
+        matchCase: re ? undefined : inputs[2].checked,
+        wholeWord: re ? undefined : inputs[3].checked,
       };
     })
     .filter(item => item.word);
 }
 
 function fromArray(arr) {
+  if (!Array.isArray(arr)) return alert('Invalid format');
   tbody.querySelectorAll('tr').forEach(tr => tr.remove());
   arr.forEach(add);
+  return true;
 }

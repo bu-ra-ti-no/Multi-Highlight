@@ -26,14 +26,14 @@ chrome.storage.local.get('words', (result) => {
   }
 });
 
-function colorize(node, words, startIndex) {
+function colorize(node, words, startIndex = 0) {
   const txt = node.data;
   if (!txt) return;
   const txtLow = words.i ? txt.toLowerCase() : undefined;
 
   const pos = [-1, -1];
 
-  for (let i = startIndex || 0; i < words.length; i++) {
+  for (let i = startIndex; i < words.length; i++) {
     if (!search(txt, txtLow, words[i], pos)) continue;
 
     const text1 = pos[0] === 0 ? null : document.createTextNode(txt.substring(0, pos[0]));

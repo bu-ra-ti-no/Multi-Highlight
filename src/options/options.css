@@ -50,22 +50,22 @@ td:has(>input[pattern]:valid)~td>input[type=checkbox] {
 #copy, #paste {
     background-size: 16px;
     background-repeat: no-repeat;
-    background-position: 50%;
+    background-position: center;
     width: 24px;
     height: 24px;
     border-width: 1px;
     border-radius: 3px;
     float: left;
-    margin-right: .4em;
 }
 
 #copy {
-    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAgMAAABinRfyAAAACVBMVEUAAAAAAAD///+D3c/SAAAAAXRSTlMAQObYZgAAADdJREFUeAFjCA1gYGDImgIiZoKIWQ5AYmookFi20gFETAARS0BEKJBYtRJChIYBCQY2VII1NBQAzdIZaklVEmwAAAAASUVORK5CYII=');
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAgMAAABinRfyAAAACVBMVEUAAAAAAAD///+D3c/SAAAAAXRSTlMAQObYZgAAADdJREFUeAFjCA1gYGDImgIiZoKIWQ5AYmookFi20gFETAARS0BEKJBYtRJChIYBCQY2VII1NBQAzdIZaklVEmwAAAAASUVORK5CYII=");
     margin-left: 2em;
+    margin-right: .4em;
 }
 
 #paste {
-    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAgMAAABinRfyAAAACVBMVEUAAAAAAAD///+D3c/SAAAAAXRSTlMAQObYZgAAAD1JREFUeAEdxrENgDAMRNHPZixxhQdwpGxD657GmZIzzdMDAdp2nYJUeCshqrzUrG+vn9k7k3faM5Lh+pE+dp0YRwXyRYwAAAAASUVORK5CYII=');
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAgMAAABinRfyAAAACVBMVEUAAAAAAAD///+D3c/SAAAAAXRSTlMAQObYZgAAAD1JREFUeAEdxrENgDAMRNHPZixxhQdwpGxD657GmZIzzdMDAdp2nYJUeCshqrzUrG+vn9k7k3faM5Lh+pE+dp0YRwXyRYwAAAAASUVORK5CYII=");
 }
 
 #apply {
