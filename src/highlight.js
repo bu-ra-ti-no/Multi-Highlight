@@ -12,7 +12,7 @@ chrome.storage.local.get('words', (result) => {
     }
   }
 
-  const ignore = ['STYLE', 'SCRIPT', 'NOSCRIPT', 'IFRAME', 'OBJECT'];
+  const ignore = ['STYLE', 'SCRIPT', 'NOSCRIPT', 'IFRAME', 'OBJECT', 'text', 'tspan'];
 
   const nodeIterator = document.createNodeIterator(document.body, NodeFilter.SHOW_TEXT, (node) => {
     return ignore.includes(node.parentElement.tagName)

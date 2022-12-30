@@ -6,3 +6,6 @@ Chrome extension. Highlights the words specified in the settings in different co
 
 ## 2. Result
 ![result](doc/2.png)
+
+---
+⚠️ Doesn't search for text inside images, vector SVG graphics, and pseudo-elements.
