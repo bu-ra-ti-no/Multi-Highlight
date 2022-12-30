@@ -38,20 +38,25 @@ function colorize(node, words, startIndex = 0) {
 
     const text1 = pos[0] === 0 ? null : document.createTextNode(txt.substring(0, pos[0]));
     const text2 = pos[1] === txt.length ? null : document.createTextNode(txt.substring(pos[1]));
-    const span = document.createElement('span');
-    span.style.backgroundColor = words[i].color;
-    span.textContent = txt.substring(pos[0], pos[1]);
+    
+    if (text1 === null && text2 === null && node.parentElement.textContent === txt) {
+      node.parentElement.style.backgroundColor = words[i].color;
+    } else {
+      const span = document.createElement('span');
+      span.style.backgroundColor = words[i].color;
+      span.textContent = txt.substring(pos[0], pos[1]);
 
-    const parent = node.parentElement;
+      const parent = node.parentElement;
 
-    if (text1) parent.insertBefore(text1, node);
-    parent.insertBefore(span, node);
-    if (text2) parent.insertBefore(text2, node);
+      if (text1) parent.insertBefore(text1, node);
+      parent.insertBefore(span, node);
+      if (text2) parent.insertBefore(text2, node);
 
-    parent.removeChild(node);
+      parent.removeChild(node);
 
-    if (text1) colorize(text1, words, i + 1);
-    if (text2) colorize(text2, words, i);
+      if (text1) colorize(text1, words, i + 1);
+      if (text2) colorize(text2, words, i);
+    }
 
     break;
   }
