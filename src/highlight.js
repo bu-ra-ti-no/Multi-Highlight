@@ -20,18 +20,20 @@ chrome.storage.local.get('words', (result) => {
       : NodeFilter.FILTER_ACCEPT;
   });
 
-  let node;
+  let node, cnt = 0;
   while (node = nodeIterator.nextNode()) {
-    colorize(node, words);
+    cnt += colorize(node, words);
   }
+  chrome.runtime.sendMessage(undefined, cnt);
 });
 
 function colorize(node, words, startIndex = 0) {
   const txt = node.data;
-  if (!txt) return;
+  if (!txt) return 0;
   const txtLow = words.i ? txt.toLowerCase() : undefined;
 
   const pos = [-1, -1];
+  let cnt = 0;
 
   for (let i = startIndex; i < words.length; i++) {
     if (!search(txt, txtLow, words[i], pos)) continue;
@@ -54,12 +56,15 @@ function colorize(node, words, startIndex = 0) {
 
       parent.removeChild(node);
 
-      if (text1) colorize(text1, words, i + 1);
-      if (text2) colorize(text2, words, i);
+      if (text1) cnt += colorize(text1, words, i + 1);
+      if (text2) cnt += colorize(text2, words, i);
     }
 
+    cnt++;
     break;
   }
+
+  return cnt;
 }
 
 function search(txt, txtLow, word, pos) {
