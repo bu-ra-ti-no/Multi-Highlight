@@ -12,18 +12,38 @@ chrome.storage.local.get('words', (result) => {
     }
   }
 
-  const ignore = ['STYLE', 'SCRIPT', 'NOSCRIPT', 'IFRAME', 'OBJECT', 'text', 'tspan'];
+  const ignore = ['STYLE', 'SCRIPT', 'NOSCRIPT', 'OBJECT'];
+  const ignoreNS = 'http://www.w3.org/2000/svg';
+  let cnt = 0;
 
-  const nodeIterator = document.createNodeIterator(document.body, NodeFilter.SHOW_TEXT, (node) => {
-    return ignore.includes(node.parentElement.tagName)
-      ? NodeFilter.FILTER_REJECT
-      : NodeFilter.FILTER_ACCEPT;
-  });
+  const diveNode = (root) => {
+    const whatToShow = NodeFilter.SHOW_ELEMENT + NodeFilter.SHOW_TEXT;
+    const iterator = document.createNodeIterator(root, whatToShow, (node) => {
+      if (node.nodeType === Node.TEXT_NODE) {
+        const parent = node.parentElement;
+        if (ignore.includes(parent.tagName)) return NodeFilter.FILTER_REJECT;
+        if (parent.namespaceURI === ignoreNS) return NodeFilter.FILTER_REJECT;
+      } else if (node.namespaceURI === ignoreNS) {
+        return NodeFilter.FILTER_REJECT;
+      }
+      return NodeFilter.FILTER_ACCEPT;
+    });
 
-  let node, cnt = 0;
-  while (node = nodeIterator.nextNode()) {
-    cnt += colorize(node, words);
+    let node;
+    while (node = iterator.nextNode()) {
+      if (node.shadowRoot) {
+        diveNode(node.shadowRoot);
+      } else if (node.nodeType === Node.TEXT_NODE) {
+        cnt += colorize(node, words);
+      }
+    }
+  };
+
+  diveNode(document.body);
+  for (let i = 0; i < window.frames.length; i++) {
+    diveNode(window.frames[i].document.body);
   }
+
   chrome.runtime.sendMessage(undefined, cnt);
 });
 
