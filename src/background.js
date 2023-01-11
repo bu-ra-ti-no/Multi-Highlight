@@ -8,7 +8,8 @@ chrome.action.onClicked.addListener((tab) => {
   });
 });
 
-chrome.runtime.onMessage.addListener((message) => {
-  chrome.action.setBadgeText({text: message.toString()});
-  setTimeout(() => chrome.action.setBadgeText({text: ''}), 5000);
+chrome.runtime.onMessage.addListener((message, sender) => {
+  const tabId = sender.tab.id;
+  chrome.action.setBadgeText({text: message.toString(), tabId});
+  setTimeout(() => chrome.action.setBadgeText({text: '', tabId}), 5000);
 });
