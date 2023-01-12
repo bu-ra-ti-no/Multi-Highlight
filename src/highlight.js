@@ -23,6 +23,7 @@ chrome.storage.local.get('words', (result) => {
         const parent = node.parentElement;
         if (ignore.includes(parent.tagName)) return NodeFilter.FILTER_REJECT;
         if (parent.namespaceURI === ignoreNS) return NodeFilter.FILTER_REJECT;
+        if (parent.shadowRoot) return NodeFilter.FILTER_REJECT;
       } else if (node.namespaceURI === ignoreNS) {
         return NodeFilter.FILTER_REJECT;
       }
@@ -31,10 +32,10 @@ chrome.storage.local.get('words', (result) => {
 
     let node;
     while (node = iterator.nextNode()) {
-      if (node.shadowRoot) {
-        diveNode(node.shadowRoot);
-      } else if (node.nodeType === Node.TEXT_NODE) {
+      if (node.nodeType === Node.TEXT_NODE) {
         cnt += colorize(node, words);
+      } else if (node.shadowRoot) {
+        diveNode(node.shadowRoot);
       }
     }
   };
