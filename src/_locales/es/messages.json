@@ -1,0 +1,41 @@
+{
+  "extName": {
+    "message": "Resaltado Múltiple"
+  },
+  "extDescription": {
+    "message": "Resalta las palabras que desees en las páginas web."
+  },
+  "extTooltip": {
+    "message": "Resaltado Múltiple"
+  },
+  "optCaption": {
+    "message": "Palabras&nbsp;y&nbsp;colores"
+  },
+  "optWord": {
+    "message": "Palabra"
+  },
+  "optColor": {
+    "message": "Color"
+  },
+  "optMatchCase": {
+    "message": "Caso sensible"
+  },
+  "optWholeWord": {
+    "message": "Palabra completa"
+  },
+  "optCopy": {
+    "message": "Copiar"
+  },
+  "optPaste": {
+    "message": "Pegar"
+  },
+  "optApply": {
+    "message": "Aplicar"
+  },
+  "optCancel": {
+    "message": "Cancelar"
+  },
+  "optAuto": {
+    "message": "modo automático"
+  }
+}

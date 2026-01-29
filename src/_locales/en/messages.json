@@ -30,6 +30,12 @@
     "message": "Paste"
   },
   "optApply": {
-    "message": "Apply changes"
+    "message": "Apply"
+  },
+  "optCancel": {
+    "message": "Cancel"
+  },
+  "optAuto": {
+    "message": "auto mode"
   }
 }

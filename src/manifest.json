@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "__MSG_extName__",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "__MSG_extDescription__",
   "action": {
     "default_title": "__MSG_extTooltip__",
@@ -9,9 +9,13 @@
   },
   "options_page": "options/options.html",
   "permissions": [
+    "tabs",
     "activeTab",
     "scripting",
     "storage"
+  ],
+  "host_permissions": [
+    "<all_urls>"
   ],
   "background": {
     "service_worker": "background.js"

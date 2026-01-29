@@ -1,0 +1,41 @@
+{
+  "extName": {
+    "message": "Surlignage Multiple"
+  },
+  "extDescription": {
+    "message": "Surligne les mots que vous souhaitez dans les pages web."
+  },
+  "extTooltip": {
+    "message": "Surlignage Multiple"
+  },
+  "optCaption": {
+    "message": "Mots&nbsp;et&nbsp;couleurs"
+  },
+  "optWord": {
+    "message": "Mot"
+  },
+  "optColor": {
+    "message": "Couleur"
+  },
+  "optMatchCase": {
+    "message": "Respecter la casse"
+  },
+  "optWholeWord": {
+    "message": "Mot entier"
+  },
+  "optCopy": {
+    "message": "Copier"
+  },
+  "optPaste": {
+    "message": "Coller"
+  },
+  "optApply": {
+    "message": "Appliquer"
+  },
+  "optCancel": {
+    "message": "Annuler"
+  },
+  "optAuto": {
+    "message": "mode automatique"
+  }
+}

@@ -1,10 +1,16 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8">
-    <link rel="stylesheet" href="options.css">
+    <meta charset=utf-8>
+    <link rel=stylesheet href=options.css>
   </head>
   <body>
+    <label><input type=radio name=w><span>1</span></label>
+    <label><input type=radio name=w><span>2</span></label>
+    <label><input type=radio name=w><span>3</span></label>
+    <label><input type=radio name=w><span>4</span></label>
+    <label><input type=radio name=w><span>5</span></label>
+    <label><input type=radio name=w><span>6</span></label>
     <table>
       <caption>__MSG_optCaption__</caption>
       <thead>
@@ -13,16 +19,18 @@
           <th>__MSG_optColor__</th>
           <th>__MSG_optMatchCase__</th>
           <th>__MSG_optWholeWord__</th>
-          <th><button id="add">&#x2795;</button></th>
+          <th><button id=add>&#x2795;</button></th>
         </tr>
       </thead>
-      <tbody>
-
-      </tbody>
+      <tbody></tbody>
     </table>
-    <button id="copy" title="__MSG_optCopy__"></button>
-    <button id="paste" title="__MSG_optPaste__"></button>
-    <button id="apply" disabled>__MSG_optApply__</button>
-    <script src="options.js"></script>
+    <div id=buttons>
+      <button id=copy title=__MSG_optCopy__></button>
+      <button id=paste title=__MSG_optPaste__></button>
+      <button id=apply disabled>__MSG_optApply__</button>
+      <button id=cancel disabled>__MSG_optCancel__</button>
+    </div>
+    <label><input id=auto type=checkbox>__MSG_optAuto__</label>
+    <script src=options.js></script>
   </body>
 </html>

@@ -1,0 +1,41 @@
+{
+  "extName": {
+    "message": "Multi-Markierung"
+  },
+  "extDescription": {
+    "message": "Hebt mehrere Wörter in verschiedenen Farben hervor."
+  },
+  "extTooltip": {
+    "message": "Multi-Markierung"
+  },
+  "optCaption": {
+    "message": "Wörter&nbsp;und&nbsp;Farben"
+  },
+  "optWord": {
+    "message": "Wort"
+  },
+  "optColor": {
+    "message": "Farbe"
+  },
+  "optMatchCase": {
+    "message": "Groß-/Klein beachten"
+  },
+  "optWholeWord": {
+    "message": "Ganzes Wort"
+  },
+  "optCopy": {
+    "message": "Kopieren"
+  },
+  "optPaste": {
+    "message": "Einfügen"
+  },
+  "optApply": {
+    "message": "Übernehmen"
+  },
+  "optCancel": {
+    "message": "Abbrechen"
+  },
+  "optAuto": {
+    "message": "Automatikmodus"
+  }
+}

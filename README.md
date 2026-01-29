@@ -1,5 +1,5 @@
 # Multi-Highlight
-Chrome extension. Highlights the words specified in the settings in different colors.
+Chrome extension. Highlights all words you want in webpages.
 
 ## 1. Settings
 ![settings](doc/1.png)
@@ -8,4 +8,4 @@ Chrome extension. Highlights the words specified in the settings in different co
 ![result](doc/2.png)
 
 ---
-⚠️ Doesn't search for text inside images, vector SVG graphics, and pseudo-elements.
+⚠️ Doesn't search for text inside images, \<option\>'s and ::pseudo-elements.

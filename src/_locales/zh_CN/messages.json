@@ -1,0 +1,41 @@
+{
+  "extName": {
+    "message": "多词高亮"
+  },
+  "extDescription": {
+    "message": "在网页上高亮显示您想要的所有词语。"
+  },
+  "extTooltip": {
+    "message": "多词高亮"
+  },
+  "optCaption": {
+    "message": "词语&nbsp;与&nbsp;颜色"
+  },
+  "optWord": {
+    "message": "词语"
+  },
+  "optColor": {
+    "message": "颜色"
+  },
+  "optMatchCase": {
+    "message": "区分大小写"
+  },
+  "optWholeWord": {
+    "message": "全词匹配"
+  },
+  "optCopy": {
+    "message": "复制"
+  },
+  "optPaste": {
+    "message": "粘贴"
+  },
+  "optApply": {
+    "message": "应用"
+  },
+  "optCancel": {
+    "message": "取消"
+  },
+  "optAuto": {
+    "message": "自动模式"
+  }
+}

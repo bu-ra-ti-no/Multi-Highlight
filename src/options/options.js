@@ -3,21 +3,60 @@ document.body.innerHTML = document.body.innerHTML.replace(
   /__MSG_(\w+)__/g, (_, v) => v ? chrome.i18n.getMessage(v) : '');
 
 
+const state = {
+  _key: '',
+  get currentKey() {
+    return this._key;
+  },
+  set currentKey(value) {
+    if (value && this._key !== value) {
+      this._key = value;
+      const index = value.slice(5);
+      document.querySelectorAll('input[type="radio"]')[index - 1].checked = true;
+      fillTable();
+      chrome.storage.local.set(
+        { currentKey: value },
+        () => {}
+      );
+    }
+  }
+};
 const tbody = document.querySelector('tbody');
+
+chrome.storage.local.get('currentKey', (result1) => {
+  state.currentKey = result1.currentKey;
+  if (!state.currentKey) {
+    // first run? old storage?
+    chrome.storage.local.get('words', (result2) => {
+      chrome.storage.local.remove('words');
+      chrome.storage.local.set(
+        { words1: result2.words || [] },
+        () => state.currentKey = 'words1'
+      );
+    });
+  }
+});
+
+chrome.storage.local.get('auto', (result) => {
+  document.getElementById('auto').checked = Boolean(result.auto);
+});
 
 document.getElementById('add').onclick = () => add();
 
+document.getElementById('auto').onclick = function() {
+  chrome.storage.local.set({ auto: this.checked }, () => {});
+  chrome.runtime.sendMessage(undefined, `auto:${this.checked ? 'on' : 'off'}`);
+};
+
 tbody.onclick = (e) => {
   if (e.target.tagName === 'BUTTON') {
-    e.target.parentNode.parentNode.remove();
-    document.getElementById('apply').removeAttribute('disabled');
+    e.target.closest('tr').remove();
+    lockKey();
   }
 };
 
-tbody.onchange = (e) => {
-  if (e.target.tagName === 'INPUT') {
-    document.getElementById('apply').removeAttribute('disabled');
-  }
+tbody.oninput = () => {
+  lockKey();
 };
 
 document.getElementById('copy').onclick = function () {
@@ -30,54 +69,50 @@ document.getElementById('paste').onclick = function () {
   navigator.clipboard
     .readText()
     .then(txt => fromArray(JSON.parse(txt)))
-    .then((ok) => {
-      if (ok) document.getElementById('apply').removeAttribute('disabled');
-    })
+    .then(() => lockKey())
     .catch(e => alert(e.message));
 };
 
 document.getElementById('apply').onclick = function () {
-  chrome.storage.local.set({ words: toArray() })
-    .then(() => this.setAttribute('disabled', ''));
+  chrome.storage.local.set(
+    { [state.currentKey]: toArray() },
+    unlockKey
+  );
 };
 
-chrome.storage.local.get('words')
-  .then((result) => {
-    if (result.words) fromArray(result.words);
-  });
+document.getElementById('cancel').onclick = function () {
+  fillTable();
+  unlockKey();
+};
 
-function add(item) {
+Array.from(document.querySelectorAll('body>label:not(:last-of-type)'))
+  .forEach(e => e.addEventListener('click', keySelectionHandler));
+
+function keySelectionHandler() {
+  const input = this.firstChild;
+  setTimeout(() => {
+    if (input.checked) {
+      state.currentKey = 'words' + input.nextSibling.textContent;
+    }
+  }, 100)
+  
+}
+
+function add(item = {
+  word: '', color: '#dd0000', matchCase: false, wholeWord: false, focus: true
+}) {
   const tr = document.createElement('tr');
-  let td, focus;
 
-  if (!item) {
-    item = { word: '', color: '#dd0000', matchCase: false, wholeWord: false };
-    focus = true;
-  }
-
-  td = document.createElement('td');
-  td.innerHTML = `<input value="${item.word}" pattern="^\/.+\/i?$" title>`;
-  tr.appendChild(td);
-
-  td = document.createElement('td');
-  td.innerHTML = `<input type="color" value="${item.color || '#ffff00'}">`;
-  tr.appendChild(td);
-
-  td = document.createElement('td');
-  td.innerHTML = `<input type="checkbox"${item.matchCase ? ' checked' : ''}>`;
-  tr.appendChild(td);
-
-  td = document.createElement('td');
-  td.innerHTML = `<input type="checkbox"${item.wholeWord ? ' checked' : ''}>`;
-  tr.appendChild(td);
-
-  td = document.createElement('td');
-  td.innerHTML = `<button>&#x2716;</button>`;
-  tr.appendChild(td);
+  tr.innerHTML = `
+    <td><input value="${item.word}" pattern="^\/.+\/i?$" title></td>
+    <td><input type="color" value="${item.color}"></td>
+    <td><input type="checkbox"${item.matchCase ? ' checked' : ''}></td>
+    <td><input type="checkbox"${item.wholeWord ? ' checked' : ''}></td>
+    <td><button>&#x2716;</button></td>`;
 
   tbody.appendChild(tr);
-  
-  if (focus) tr.firstChild.firstChild.focus();
+
+  if (item.focus) tr.querySelector('input').focus();
 }
 
 function toArray() {
@@ -86,8 +121,8 @@ function toArray() {
       const inputs = tr.querySelectorAll('input');
       const re = !inputs[0].validity.patternMismatch;
       return {
+        re,
         word: inputs[0].value,
-        re: re,
         color: inputs[1].value,
         matchCase: re ? undefined : inputs[2].checked,
         wholeWord: re ? undefined : inputs[3].checked,
@@ -97,8 +132,27 @@ function toArray() {
 }
 
 function fromArray(arr) {
-  if (!Array.isArray(arr)) return alert('Invalid format');
-  tbody.querySelectorAll('tr').forEach(tr => tr.remove());
+  if (!Array.isArray(arr)) throw new Error('Invalid format');
+  tbody.replaceChildren();
   arr.forEach(add);
-  return true;
+}
+
+function fillTable() {
+  chrome.storage.local.get(state.currentKey, (result) => {
+    fromArray(result[state.currentKey] || []);
+  });
+}
+
+function lockKey() {
+  document.getElementById('apply').removeAttribute('disabled');
+  document.getElementById('cancel').removeAttribute('disabled');
+  Array.from(document.querySelectorAll('input[type="radio"]:not(:checked)'))
+    .forEach(input => input.parentElement.style.visibility = 'hidden');
+}
+
+function unlockKey() {
+  document.getElementById('apply').setAttribute('disabled', '');
+  document.getElementById('cancel').setAttribute('disabled', '');
+  Array.from(document.querySelectorAll('input[type="radio"]'))
+    .forEach(input => input.parentElement.style.visibility = null);
 }
