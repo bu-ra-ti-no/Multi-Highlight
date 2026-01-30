@@ -61,6 +61,7 @@ function highlight() {
           if (!root) return;
           const whatToShow = NodeFilter.SHOW_ELEMENT + NodeFilter.SHOW_TEXT;
           const treeWalker = document.createTreeWalker(root, whatToShow, (node) => {
+            if (node.parentNode?.shadowRoot) return NodeFilter.FILTER_REJECT;
             if (node.nodeType === Node.TEXT_NODE) return NodeFilter.FILTER_ACCEPT;
             if (ignore.includes(node.tagName)) return NodeFilter.FILTER_REJECT;
             return NodeFilter.FILTER_ACCEPT;
@@ -77,7 +78,7 @@ function highlight() {
           }
         };
 
-        inspectNode(document.body);
+        inspectNode(document.documentElement);
 
         // Highlight!
         let count = 0;
