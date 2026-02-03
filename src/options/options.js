@@ -37,8 +37,9 @@ chrome.storage.local.get('currentKey', (result1) => {
   }
 });
 
-chrome.storage.local.get('auto', (result) => {
+chrome.storage.local.get(['auto', 'scrollMarks'], (result) => {
   document.getElementById('auto').checked = Boolean(result.auto);
+  document.getElementById('scroll-marks').checked = Boolean(result.scrollMarks);
 });
 
 document.getElementById('add').onclick = () => add();
@@ -46,6 +47,10 @@ document.getElementById('add').onclick = () => add();
 document.getElementById('auto').onclick = function() {
   chrome.storage.local.set({ auto: this.checked }, () => {});
   chrome.runtime.sendMessage(undefined, `auto:${this.checked ? 'on' : 'off'}`);
+};
+
+document.getElementById('scroll-marks').onclick = function() {
+  chrome.storage.local.set({ scrollMarks: this.checked }, () => {});
 };
 
 tbody.onclick = (e) => {
@@ -85,7 +90,8 @@ document.getElementById('cancel').onclick = function () {
   unlockKey();
 };
 
-Array.from(document.querySelectorAll('body>label:not(:last-of-type)'))
+Array.from(document.querySelectorAll('body>label'))
+  .slice(0, -2)
   .forEach(e => e.addEventListener('click', keySelectionHandler));
 
 function keySelectionHandler() {

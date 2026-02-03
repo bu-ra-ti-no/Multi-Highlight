@@ -8,15 +8,18 @@
  * @property {boolean} matchCase
  * @property {boolean} re - the word is Regexp
  * @property {Range[]} ranges
+ * @property {[[number, number]]?} scrollMarks
  */
 
 highlight();
 
 function highlight() {
   return new Promise((resolve) => {
-    chrome.storage.local.get('currentKey', (result) => {
+    chrome.storage.local.get(['currentKey', 'scrollMarks'], (result) => {
       const key = result.currentKey;
       if (!key) return resolve(0);
+
+      const withScrollMarks = Boolean(result.scrollMarks);
 
       chrome.storage.local.get(key, (result) => {
         /** @type {SearchItem[]} */
@@ -32,6 +35,7 @@ function highlight() {
             hasCaseInsensitive = true;
           }
           item.ranges = [];
+          item.scrollMarks = withScrollMarks ? [] : null;
         }
 
         // StyleSheet
@@ -90,6 +94,11 @@ function highlight() {
             count += ranges.length;
           }
         });
+
+        // Scroll-marks
+        if (self === top) { // not in iframe?
+          createScrollMarks(withScrollMarks ? searchItems : null);
+        }
 
         resolve(count);
       });
@@ -172,4 +181,92 @@ function isWhitespace(c) {
     || c === '\u2000' || c === '\u200a' || c === '\u2028'
     || c === '\u2029' || c === '\u202f' || c === '\u205f'
     || c === '\u3000' || c === '\ufeff';
+}
+
+/** @param {SearchItem[]?} searchItems */
+function createScrollMarks(searchItems) {
+  const id = 'mh-scroll-marks';
+  /** @type {HTMLCanvasElement} */
+  let canvas = document.getElementById(id);
+
+  if (searchItems === null) {
+    return canvas?.remove();
+  }
+
+  if (canvas === null) {
+    canvas = document.createElement('canvas');
+    canvas.setAttribute('id', id);
+    const { style } = canvas;
+    style.position = 'fixed';
+    style.top = '0';
+    style.right = '0';
+    style.outline = '1px solid whitesmoke';
+    style.zIndex = '9999';
+    style.width = '15px';
+    style.height = '100%';
+    canvas.width = 15;
+    canvas.height = document.documentElement.clientHeight;
+    document.body.appendChild(canvas);
+  }
+  if (canvas.height < 100) return;
+
+  const draw = () => {
+    const documentHeight = Math.max(
+      document.body.scrollHeight,
+      document.body.offsetHeight,
+      document.documentElement.clientHeight,
+      document.documentElement.scrollHeight,
+      document.documentElement.offsetHeight,
+    );
+    const scrollTop = document.documentElement.scrollTop;
+
+    for (const searchItem of searchItems) {
+      if (searchItem.scrollMarks.length < searchItem.ranges.length) {
+        searchItem.scrollMarks = new Array(searchItem.ranges.length);
+      }
+      for (let i = 0; i < searchItem.ranges.length; i++) {
+        const range = searchItem.ranges[i];
+        const rect = range.getBoundingClientRect();
+        const relativeTop = (rect.top + scrollTop) / documentHeight;
+        const relativeBottom = (rect.bottom + scrollTop) / documentHeight;
+        searchItem.scrollMarks[i] = [relativeTop, relativeBottom];
+      }
+    }
+
+    canvas.height = document.documentElement.clientHeight;
+    const ctx = canvas.getContext('2d');
+    const {width, height} = canvas;
+    const clientHeight = height - 2 * width;
+    ctx.fillStyle = 'rgba(255, 255, 255, .5)';
+    ctx.clearRect(0, 0, width, height);
+    ctx.fillRect(0, 0, width, height);
+
+    ctx.strokeStyle = 'darkgray';
+    ctx.rect(1.5, 1.5, width - 3, width - 3);
+    ctx.rect(1.5, height - width + 1.5, width - 3, width - 3);
+    ctx.moveTo(1.5, 1.5); ctx.lineTo(width - 1.5, width - 1.5);
+    ctx.moveTo(width - 1.5, 1.5); ctx.lineTo(1, width - 1.5);
+    ctx.moveTo(1.5, height - width + 1.5); ctx.lineTo(width - 1.5, height - 1.5);
+    ctx.moveTo(width - 1.5, height - width + 1.5); ctx.lineTo(1.5, height - 1.5);
+    ctx.stroke();
+
+    for (const searchItem of searchItems) {
+      if (searchItem.ranges.length === 0) continue;
+      ctx.fillStyle = searchItem.color;
+      for (let i = 0; i < searchItem.ranges.length; i++) {
+        const [top, bottom] = searchItem.scrollMarks[i];
+        if (top < 0 || bottom > 1) continue;
+        ctx.fillRect(0, width + clientHeight * top, width, clientHeight * (bottom - top));
+      }
+    }
+  };
+
+  draw();
+  
+  const fn = 'mh_resizeHandler';
+  if (fn in window) {
+    window.removeEventListener('resize', window[fn]);
+  }
+  window[fn] = draw;
+  window.addEventListener('resize', draw);
 }

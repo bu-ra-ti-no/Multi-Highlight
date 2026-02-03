@@ -37,5 +37,8 @@
   },
   "optAuto": {
     "message": "modo automático"
+  },
+  "optScrollMarkers": {
+    "message": "marcadores de la barra"
   }
 }

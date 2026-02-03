@@ -37,5 +37,8 @@
   },
   "optAuto": {
     "message": "自动模式"
+  },
+  "optScrollMarkers": {
+    "message": "显示滚动条标记"
   }
 }
