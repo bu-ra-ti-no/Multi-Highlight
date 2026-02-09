@@ -1,20 +1,23 @@
 {
   "manifest_version": 3,
   "name": "__MSG_extName__",
-  "version": "2.0.0",
   "description": "__MSG_extDescription__",
+  "version": "2.0.0",
+  "homepage_url": "https://github.com/bu-ra-ti-no/Multi-Highlight",
+  "minimum_chrome_version": "105",
+  "icons": {
+    "16": "icon.png",
+    "32": "icon.png",
+    "48": "icon.png"
+  },
   "action": {
-    "default_title": "__MSG_extTooltip__",
-    "default_icon": "icon.png"
+    "default_title": "__MSG_extTooltip__"
   },
   "options_page": "options/options.html",
   "permissions": [
     "activeTab",
     "scripting",
     "storage"
-  ],
-  "host_permissions": [
-    "<all_urls>"
   ],
   "background": {
     "service_worker": "background.js"

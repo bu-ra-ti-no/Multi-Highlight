@@ -204,6 +204,7 @@ function createScrollMarks(searchItems) {
     style.zIndex = '9999';
     style.width = '15px';
     style.height = '100%';
+    style.pointerEvents = 'none';
     canvas.width = 15;
     canvas.height = document.documentElement.clientHeight;
     document.body.appendChild(canvas);

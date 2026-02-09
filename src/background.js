@@ -58,7 +58,9 @@ async function highlight(tab) {
     const count = results.reduce((a, result) => a + (result.result || 0), 0);
 
     chrome.action.setBadgeText({text: count.toString(), tabId});
-    setTimeout(() => chrome.action.setBadgeText({text: '', tabId}), 5000);
+    setTimeout(() => {
+      chrome.action.setBadgeText({text: '', tabId}).catch(() => {});
+    }, 5000);
   } catch (error) {
     console.error('Multi-Highlight: ' + (error.message || error));
   }
